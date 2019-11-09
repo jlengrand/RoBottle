@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ccdbef07-1103-4e25-9b9d-dc1c6cb731c3" name="raspberrypi.local" url="http://raspberrypi.local">
+        <fileTransfer host="raspberrypi.local" port="22" rootFolder="/home/pi/projects/robottle" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
