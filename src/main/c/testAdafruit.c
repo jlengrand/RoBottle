@@ -3,11 +3,11 @@
 #include <stdint.h>
 #include <unistd.h>
 
-#include "Raspberry_Pi_2/pi_2_dht_read.h"
+#include "adafruit/Raspberry_Pi_2/pi_2_dht_read.h"
 
 int main( void )
 {
-	printf( "Raspberry Pi wiringPi DHT11 Temperature test program\n" );
+	printf( "Raspberry Pi 2 DHT11 test program\n" );
 
     int i;
     int res;
@@ -16,9 +16,13 @@ int main( void )
     int pin = 4;
     for (i = 1; i < 15; ++i){
         res = pi_2_dht_read(sensor, pin, &humidity, &temperature);
-//        printf("%d ", res);
-        printf("Temperature : %f\n", temperature);
-        printf("Humidity : %f\n", humidity);
+        if(res == 0){
+            printf("Temperature : %f\n", temperature);
+            printf("Humidity : %f\n", humidity);
+        }
+        else{
+            printf("Error when reading from sensor : %d\n", res);
+        }
         sleep(1);
     }
 
