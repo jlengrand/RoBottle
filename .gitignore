@@ -55,3 +55,4 @@ libraries/tools/kotlin-test-js-runner/lib/
 libraries/tools/kotlin-source-map-loader/lib/
 local.properties
 
+*.o
