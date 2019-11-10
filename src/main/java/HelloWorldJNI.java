@@ -5,9 +5,14 @@ public class HelloWorldJNI {
     }
 
     public static void main(String[] args) {
-        new HelloWorldJNI().sayHello();
+        HelloWorldJNI theJni = new HelloWorldJNI();
+        theJni.sayHello();
+
+        float [] res = theJni.getTemperatureAndHumidity();
+        System.out.println(res[0] + ", " + res[1]);
     }
 
-    // Declare a native method sayHello() that receives no arguments and returns void
     private native void sayHello();
+
+    private native float[] getTemperatureAndHumidity();
 }
