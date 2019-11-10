@@ -29,6 +29,6 @@ compileTestKotlin {
 }
 
 application {
-    mainClassName = "HelloWorldJNI"
+    mainClassName = "Dht11Driver"
     applicationDefaultJvmArgs = ['-Djava.library.path=./src/main/c']
 }
