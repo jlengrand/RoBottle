@@ -12,6 +12,9 @@ program: Dht11Driver.c
 library: Dht11Driver.c
 	gcc -shared -fPIC -o $(OUT).so $(INCLUDES) $(FILES)
 
+move:
+    -cp $(OUT).so
+
 clean:
 	-rm -f $(OUT).so
 	-rm -f $(OUT)
