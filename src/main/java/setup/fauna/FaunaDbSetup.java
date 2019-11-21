@@ -15,6 +15,8 @@ public class FaunaDbSetup {
     private final static String DB_NAME = "robottle";
     private final static String COLLECTION_NAME = "sensors";
     private final static String INDEX_NAME = "sensor_data";
+    private final static String INDEX_ALL_NAME = "all_sensors";
+    private final static String DEVICE_NAME = "robottle_00";
 
 
     private static String getKey() {
@@ -40,6 +42,11 @@ public class FaunaDbSetup {
         createIndex(dbClient);
         Thread.sleep(1000);
 
+        createAllIndex(dbClient);
+        Thread.sleep(1000);
+
+        createInitialValue(dbClient);
+
         adminClient.close();
         System.out.println("Client closed");
     }
@@ -55,11 +62,27 @@ public class FaunaDbSetup {
     private static void createIndex(FaunaClient dbClient) throws InterruptedException, ExecutionException {
         Value indexResults = dbClient.query(
                 CreateIndex(
-                        Obj("name", Value(INDEX_NAME), "source", Collection(Value(COLLECTION_NAME)))
+                        Obj("name", Value(INDEX_NAME),
+                            "source", Collection(Value(COLLECTION_NAME)),
+                            "unique", Value(true),
+                            "terms", Arr(Obj("field", Arr(Value("data"), Value("name"))))
+                            )
                 )
         ).get();
-        System.out.println("Create Collection for " + DB_NAME + ":\n " + indexResults + "\n");
+        System.out.println("Create name index for " + DB_NAME + ":\n " + indexResults + "\n");
     }
+
+    private static void createAllIndex(FaunaClient dbClient) throws InterruptedException, ExecutionException {
+        Value indexResults = dbClient.query(
+                CreateIndex(
+                        Obj("name", Value(INDEX_ALL_NAME),
+                                "source", Collection(Value(COLLECTION_NAME))
+                        )
+                )
+        ).get();
+        System.out.println("Create all index for " + DB_NAME + ":\n " + indexResults + "\n");
+    }
+
 
     private static void createCollection(FaunaClient dbClient) throws InterruptedException, ExecutionException {
         Value collectionResults = dbClient.query(
@@ -78,5 +101,17 @@ public class FaunaDbSetup {
         );
 
         System.out.println("Db created");
+    }
+
+    public static void createInitialValue(FaunaClient client) throws ExecutionException, InterruptedException {
+        Value init = client.query(
+                Create(
+                        Collection(Value(COLLECTION_NAME)),
+                        Obj("data",
+                                Obj("name", Value(DEVICE_NAME))
+                        )
+                )
+        ).get();
+        System.out.println("Added initial item to collection " + COLLECTION_NAME + ":\n " + init + "\n");
     }
 }
