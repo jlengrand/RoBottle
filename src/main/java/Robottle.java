@@ -1,30 +1,26 @@
 import com.faunadb.client.FaunaClient;
-import fauna.DbConnection;
+import driver.Dht11Driver;
+import fauna.Connection;
+import fauna.FaunaApi;
 
 import java.util.concurrent.ExecutionException;
 
-public class Dht11Driver {
-
-    static {
-//        System.loadLibrary("dht11");
-    }
+public class Robottle {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         Dht11Driver theDriver = new Dht11Driver();
-//        theDriver.sayHello();
+        theDriver.sayHello();
 
-        DbConnection connection = new DbConnection();
-        FaunaClient client = connection.createConnection();
+        FaunaApi api = new FaunaApi();
         Thread.sleep(1000);
 
 //        Let's see if it runs until tomorrow!
         while(true){
-//            float [] res = theDriver.getTemperatureAndHumidity();
-            float[] res = {26, 56};
+            float [] res = theDriver.getTemperatureAndHumidity();
             if(res[0] != 0 && res[1] != 0){
                 System.out.println("Sending " + res[0] + " " + res[1]);
-                connection.add(res, client);
-                connection.update(res, client);
+                api.add(res);
+                api.update(res);
             }
             else{
                 System.out.println("Incorrect data!");
@@ -33,7 +29,4 @@ public class Dht11Driver {
         }
     }
 
-    private native void sayHello();
-
-    private native float[] getTemperatureAndHumidity();
 }

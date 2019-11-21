@@ -1,40 +1,30 @@
-package setup.fauna;
+package fauna.setup;
 
 import com.faunadb.client.FaunaClient;
 import com.faunadb.client.types.Value;
+import fauna.Connection;
+import fauna.ConnectionException;
 
 import java.util.concurrent.ExecutionException;
 
 import static com.faunadb.client.query.Language.*;
+import static fauna.Connection.*;
 
-// Used to create the database and indexes. Should be run only once!
+/*
+    Used to create the database and indexes. Should be run only once!
+ */
 public class FaunaDbSetup {
 
-    private static final String API_KEY_NAME = "ROBOTTLE_KEY";
+    public static void main(String[] args) throws ExecutionException, InterruptedException, ConnectionException {
+        System.out.println("Setting up Database " + DB_NAME);
 
-    private final static String DB_NAME = "robottle";
-    private final static String COLLECTION_NAME = "sensors";
-    private final static String INDEX_NAME = "sensor_data";
-    private final static String INDEX_ALL_NAME = "all_sensors";
-    private final static String DEVICE_NAME = "robottle_00";
+        Connection connection = new Connection();
 
-
-    private static String getKey() {
-        return System.getenv(API_KEY_NAME);
-    }
-
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-        System.out.println(getKey()!= null? "API key found" : "No API key found");
-
-        FaunaClient adminClient = FaunaClient.builder()
-                .withSecret(getKey())
-                .build();
-        System.out.println("Connected to Fauna database " + DB_NAME + " with server role\n");
-
+        FaunaClient adminClient = connection.createAdminConnection();
 
         createDatabase(adminClient);
         Thread.sleep(1000);
-        FaunaClient dbClient = adminClient.newSessionClient(getDbKey(adminClient));
+        FaunaClient dbClient = connection.createConnection();
 
         createCollection(dbClient);
         Thread.sleep(1000);
@@ -108,7 +98,7 @@ public class FaunaDbSetup {
                 Create(
                         Collection(Value(COLLECTION_NAME)),
                         Obj("data",
-                                Obj("name", Value(DEVICE_NAME))
+                                Obj("name", Value(UPDATE_DEVICE_NAME))
                         )
                 )
         ).get();
